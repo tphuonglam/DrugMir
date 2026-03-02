@@ -1,5 +1,5 @@
 .conda/
 __pycache__/
-data/
-data_drug_response/
-outputs_sep/
+# data/
+# data_drug_response/
+# outputs_sep/
