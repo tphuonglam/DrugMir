@@ -4,14 +4,12 @@ from pathlib import Path
 from sklearn.model_selection import KFold
 from sklearn.metrics import (
     accuracy_score, precision_score, recall_score,
-    f1_score, roc_auc_score, matthews_corrcoef,
-    roc_curve, auc
+    f1_score, roc_auc_score, matthews_corrcoef
 )
 import shap
 import json
 import matplotlib.pyplot as plt
 
-# Assuming these exist in your environment as per your snippet
 from ml_model_utils import get_model_and_transform
 from viz_utils import *
 
@@ -26,7 +24,7 @@ MODELS = [
     # "gbm", 
     # "ada", 
     # "svm",
-]
+]   # List of models for experimenting
 SETTINGS = [
     "DEmiRs", 
     # "Combine DEmiRs",
@@ -34,7 +32,7 @@ SETTINGS = [
     "DEGs", 
     # "Intersect DEGs + DEmiRs", 
     "DEGs + DEmiRs", 
-] # Settings to compare
+]   # List of data settings for experimenting
 
 
 def train_model(model_type, df_feats, df_labels, n_splits=5, random_state=42):
@@ -170,49 +168,6 @@ def process_gene_features(df_gene: pd.DataFrame, filtered_idx: list, mapping: di
         return df_final_ml_ready
     return df_renamed
 
-
-# =========================================================================
-# === PLOTTING HELPERS
-# =========================================================================
-def plot_roc_comparison(roc_data_dict, save_path):
-    """
-    Plots ROC curves for multiple settings on the same figure.
-    roc_data_dict: { 'SettingName': (y_true, y_probs) }
-    """
-    plt.figure(figsize=(8, 6))
-    
-    for label, (y_true, y_probs) in roc_data_dict.items():
-        fpr, tpr, _ = roc_curve(y_true, y_probs)
-        # roc_auc = auc(fpr, tpr)
-        roc_auc = roc_auc_score(y_true, y_probs)
-        plt.plot(fpr, tpr, lw=2, label=f'{label} (AUC = {roc_auc:.2f})')
-
-    plt.plot([0, 1], [0, 1], color='navy', lw=2, linestyle='--')
-    plt.xlim([0.0, 1.0])
-    plt.ylim([0.0, 1.05])
-    plt.xlabel('False Positive Rate')
-    plt.ylabel('True Positive Rate')
-    plt.title('ROC Curve Comparison')
-    plt.legend(loc="lower right")
-    plt.grid(alpha=0.3)
-    plt.savefig(save_path, dpi=300)
-    plt.close()
-
-def plot_shap_beeswarm(shap_values, X, feature_names, save_path):
-    """
-    Plots a SHAP beeswarm plot.
-    """
-    plt.figure()
-    # summary_plot handles the figure creation, but we want to save it.
-    # feature_names should match columns of X
-    shap.summary_plot(shap_values, X, feature_names=feature_names, show=False)
-    plt.savefig(save_path, bbox_inches='tight', dpi=300)
-    plt.close()
-
-
-# =========================================================================
-# === MAIN EXECUTION BLOCK
-# =========================================================================
 
 if __name__ == "__main__":
     
