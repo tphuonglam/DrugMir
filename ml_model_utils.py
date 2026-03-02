@@ -3,6 +3,7 @@ from sklearn.ensemble import GradientBoostingClassifier, AdaBoostClassifier, Ran
 from sklearn.svm import SVC
 from sklearn.preprocessing import StandardScaler
 
+
 def get_model_and_transform(model_type: str, random_state = 42):
     assert model_type in ["rf", "logreg", "gbm", "ada", "svm"]
     needs_standardization = False
@@ -31,8 +32,3 @@ def get_model_and_transform(model_type: str, random_state = 42):
     tf = StandardScaler if needs_standardization else None
 
     return model_class, model_kwargs, tf
-
-# --- Example Usage ---
-# model_class, needs_transform = get_model_and_transform("logreg")
-# print(f"Model Class: {model_class.__name__}")
-# print(f"Needs Standardization: {needs_transform}")
