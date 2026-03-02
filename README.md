@@ -1,6 +1,8 @@
 # DrugMir
 
-[Insert Project Purpose/Description Here]
+DrugMiR is an explainable multi-omics framework designed to predict drug response and uncover the underlying regulatory mechanisms across five major chemotherapies. This framework utilizes interpretable machine learning (ML) models combined with a targeted feature selection strategy. By prioritizing DEmiRs as primary features, we demonstrate that these regulatory molecules contain sufficient biological information to achieve high predictive accuracy in clinical cohorts. Beyond statistical prediction, DrugMiR provides a functional layer of analysis to bridge the gap between computational outcomes and clinical reality. 
+
+Overview of the study workflow. (A) data collection and preprocessing: harmonization of clinical drug response labels with multi-omics expression profiles from the TCGA; (B) feature selection and integration: DEA is utilized to identify drug-specific gene and miRNA signatures; (C) drug response prediction: a comparative ML framework to evaluate the predictive power of single and multi-omics feature sets; (D) functional interpretation and biological significance: a multi-faceted approach, including SHAP interpretability, survival analysis, and regulatory network construction, to evaluate the clinical and biological significance of the identified markers
 
 ---
 
