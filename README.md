@@ -27,9 +27,14 @@ Use the provided shell script to run the pipeline:
 bash run_train.sh
 ```
 
+Afterwards, evaluate the trained model using:
+```bash
+bash run_test.sh
+```
+
 ### Output Structure
 
-Results are organized hierarchically: `[Output Directory] / [Drug] / [Model] / [Setting]`.
+Results are organized hierarchically: `[Output Directory] / [Drug] / [Model Setting] / [Split] / [Data Setting]`.
 
 1. Performance Metrics
 
