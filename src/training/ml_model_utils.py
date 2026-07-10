@@ -13,7 +13,7 @@ def get_model_and_transform(model_type: str, random_state = 42):
         model_kwargs = {"n_estimators": 200, "max_depth": 5, "random_state": random_state}
     elif model_type == "logreg":
         model_class = LogisticRegression
-        model_kwargs = {"solver": "liblinear", "random_state": random_state}
+        model_kwargs = {"solver": "liblinear", "random_state": random_state, "max_iter": 2000}
         needs_standardization = True 
     elif model_type == "gbm":
         model_class = GradientBoostingClassifier

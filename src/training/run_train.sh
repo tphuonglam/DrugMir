@@ -1,35 +1,50 @@
 #!/bin/bash
 
-DATASET=tcga_20260527
-ROOT_TRAIN=/mnt/HDD3/khanh/tplam/something/all_data/processed/$DATASET/data
-OUT_DIR=./results_${DATASET}_aggregate
-SPLIT_FILE=/mnt/HDD3/khanh/tplam/something/all_data/processed/$DATASET/data/cisplatin/patient_splits.csv
+DATASET=data_0616/GEO
+# SEED=0
+
+ROOT_TRAIN=/mnt/HDD3/khanh/tplam/something/all_data/processed/$DATASET
+# OUT_DIR=./results/${DATASET}/seed_${SEED}     # Single-seed version
+OUT_DIR=./results/${DATASET}                    # Multi-seed version
 
 ### MODEL ARGS
 SCALER=standard             # quantile, standard, none
 THRESHOLD_METRIC=gmean      # gmean, youden
 
-python train_aggregate.py --seed 4 --root $ROOT_TRAIN --split_file $SPLIT_FILE \
-    --models logreg \
-    --settings "DEmiRs" \
-    --outdir $OUT_DIR \
-    --drug "cisplatin" \
-    --threshold_metric $THRESHOLD_METRIC \
-    --scaler $SCALER \
-    # --mirna "hsa-mir-99a" "hsa-mir-508" "hsa-mir-218-2" "hsa-mir-181c" \
+# The name of the split file inside each drug folder
+SPLIT_FILE="patient_splits.csv"
 
-python evaluate.py --data_root $ROOT_TRAIN \
-    --model_dir $OUT_DIR \
-    --models logreg \
-    --threshold_metric $THRESHOLD_METRIC \
-    --scaler $SCALER \
+# SETTINGS=("DEmiRs" "Target Genes" "Integration")
+SETTINGS=("DEmiRs")
+
+# MODELS=("rf" "logreg" "gbm" "ada" "svm")
+MODELS=("logreg")
+
+DRUGS=("cisplatin" "carboplatin" "fluorouracil" "gemcitabine" "paclitaxel")
+
+echo "=========================================================================="
+echo "[RUNNING] Starting Multi-Drug Training Pipeline..."
+echo "=========================================================================="
+
+# 1. Train all drugs and settings in one go
+python train.py \
+    --root "$ROOT_TRAIN" \
     --split_file "$SPLIT_FILE" \
-    --outdir "$OUT_DIR/"
+    --models "${MODELS[@]}" \
+    --settings "${SETTINGS[@]}" \
+    --outdir "$OUT_DIR" \
+    --drugs "${DRUGS[@]}" \
+    --threshold_metric $THRESHOLD_METRIC \
+    --scaler $SCALER
 
-# python train_old.py --seed 4 \
-#     --root data --root_filter data_drug_response \
-#     --models logreg \
-#     --settings "DEmiRs" "DEGs" "DEGs + DEmiRs" \
-#     --outdir ./exp_4demir_0325_linearexplainer \
-#     # --drug "paclitaxel" \
-#     # --mirna "hsa-mir-99a" "hsa-mir-508" "hsa-mir-218-2" "hsa-mir-181c" \
+# 2. Evaluate all drugs and settings in one go
+python evaluate.py \
+    --data_root "$ROOT_TRAIN" \
+    --model_dir "$OUT_DIR" \
+    --models "${MODELS[@]}" \
+    --settings "${SETTINGS[@]}" \
+    --split_file "$SPLIT_FILE" \
+    --drugs "${DRUGS[@]}" \
+    --outdir "$OUT_DIR" \
+    --threshold_metric $THRESHOLD_METRIC \
+    --scaler $SCALER

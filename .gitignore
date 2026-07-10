@@ -3,3 +3,4 @@ __pycache__/
 all_data/
 src/training/results*/
 src/training/sandbox.ipynb
+src/training/*_single_seed.py

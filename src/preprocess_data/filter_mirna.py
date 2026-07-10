@@ -59,7 +59,3 @@ for drug in args.drugs:
     df_filtered = df_filtered.dropna()
     print("After dropping NaNs:", df_filtered.shape)
     df_filtered.to_csv(out_path, index=False)
-
-
-    print(df_all.shape)
-    print(df_filtered.shape)
